@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gratis Favicon Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f1ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8e9ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 10px 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #4caf50;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .preview-section.active {
+            display: block;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .preview-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .preview-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-item img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .preview-item .size-label {
+            display: block;
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .preview-item .name-label {
+            display: block;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .actions {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f0f1ff;
+            border-radius: 10px;
+        }
+
+        .code-section {
+            margin-top: 20px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 400px;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        .progress {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 10px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error.active {
+            display: block;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Gratis Favicon Generator <span class="badge">100% GRATIS</span></h1>
+        <p class="subtitle">Upload een afbeelding en download alle favicon-formaten direct naar je computer</p>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <h3>Sleep een afbeelding hierheen of klik om te uploaden</h3>
+            <p style="color: #999; margin-top: 10px;">PNG, JPG of GIF - Minimaal 512x512px aanbevolen</p>
+            <input type="file" id="fileInput" accept="image/*">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">Selecteer Afbeelding</button>
+        </div>
+
+        <div class="error" id="errorMsg"></div>
+
+        <div class="progress" id="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="status" id="statusText">Bezig met genereren...</div>
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <h2 style="margin-bottom: 15px;">📱 Gegenereerde Favicons</h2>
+            <div class="preview-grid" id="previewGrid"></div>
+
+            <div class="actions">
+                <h3 style="margin-bottom: 15px;">💾 Download Opties</h3>
+                <button class="btn btn-secondary" onclick="downloadAll()">⬇️ Download Alle Favicons (ZIP)</button>
+                <button class="btn" onclick="downloadIndividual()">📥 Download Individueel</button>
+            </div>
+
+            <div class="info-box">
+                <h3>📁 Hoe gebruik je de favicons?</h3>
+                <p>1. Download alle bestanden naar de root van je website<br>
+                   2. Kopieer de HTML code hieronder naar de &lt;head&gt; sectie van je HTML<br>
+                   3. Upload de favicon bestanden naar je webserver samen met je HTML</p>
+            </div>
+
+            <div class="code-section">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('html')">HTML Code</button>
+                    <button class="tab" onclick="switchTab('manifest')">Web Manifest</button>
+                    <button class="tab" onclick="switchTab('instructions')">Installatie</button>
+                </div>
+
+                <div class="tab-content active" id="html-tab">
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode('htmlCode')">Kopieer</button>
+                        <pre id="htmlCode"></pre>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="manifest-tab">
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode('manifestCode')">Kopieer</button>
+                        <pre id="manifestCode"></pre>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="instructions-tab">
+                    <div class="code-block">
+                        <pre id="instructionsCode"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        // Favicon configuraties
+        const faviconSizes = [
+            { size: 16, name: 'favicon-16x16.png', description: 'Browser tab' },
+            { size: 32, name: 'favicon-32x32.png', description: 'Standard' },
+            { size: 48, name: 'favicon-48x48.png', description: 'Windows' },
+            { size: 180, name: 'apple-touch-icon.png', description: 'iOS' },
+            { size: 192, name: 'android-chrome-192x192.png', description: 'Android' },
+            { size: 512, name: 'android-chrome-512x512.png', description: 'Android HD' }
+        ];
+
+        // Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const progress = document.getElementById('progress');
+        const progressFill = document.getElementById('progressFill');
+        const statusText = document.getElementById('statusText');
+        const previewSection = document.getElementById('previewSection');
+        const previewGrid = document.getElementById('previewGrid');
+        const htmlCode = document.getElementById('htmlCode');
+        const manifestCode = document.getElementById('manifestCode');
+        const instructionsCode = document.getElementById('instructionsCode');
+        const errorMsg = document.getElementById('errorMsg');
+
+        let generatedFiles = [];
+
+        // Drag & Drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        async function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('Selecteer een geldige afbeelding');
+                return;
+            }
+
+            hideError();
+            progress.classList.add('active');
+            previewSection.classList.remove('active');
+            generatedFiles = [];
+            
+            try {
+                const img = await loadImage(file);
+                
+                for (let i = 0; i < faviconSizes.length; i++) {
+                    const config = faviconSizes[i];
+                    updateProgress((i / faviconSizes.length) * 100, `Genereren ${config.name}...`);
+                    
+                    const blob = await resizeImage(img, config.size);
+                    const url = URL.createObjectURL(blob);
+                    
+                    generatedFiles.push({
+                        ...config,
+                        blob: blob,
+                        url: url
+                    });
+                }
+
+                updateProgress(100, 'Klaar!');
+                setTimeout(() => {
+                    displayResults();
+                }, 300);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Er ging iets mis: ' + error.message);
+                progress.classList.remove('active');
+            }
+        }
+
+        function loadImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => reject(new Error('Kon afbeelding niet laden'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error('Kon bestand niet lezen'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function resizeImage(img, size) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // GEEN witte achtergrond - transparantie behouden!
+                // ctx.clearRect zorgt ervoor dat canvas transparant blijft
+                ctx.clearRect(0, 0, size, size);
+                
+                // Bereken schaling en positie
+                const scale = Math.min(size / img.width, size / img.height);
+                const x = (size - img.width * scale) / 2;
+                const y = (size - img.height * scale) / 2;
+                
+                ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                
+                canvas.toBlob(resolve, 'image/png', 1.0);
+            });
+        }
+
+        function updateProgress(percent, text) {
+            progressFill.style.width = percent + '%';
+            statusText.textContent = text;
+        }
+
+        function displayResults() {
+            progress.classList.remove('active');
+            previewSection.classList.add('active');
+
+            previewGrid.innerHTML = generatedFiles.map((f, idx) => `
+                <div class="preview-item">
+                    <img src="${f.url}" alt="${f.name}">
+                    <span class="size-label">${f.size}x${f.size}</span>
+                    <span class="name-label">${f.description}</span>
+                </div>
+            `).join('');
+
+            generateCodes();
+        }
+
+        function generateCodes() {
+            // HTML Code
+            htmlCode.textContent = `<!-- Plaats deze code in de <head> sectie van je HTML -->
+
+<!-- Standard favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+
+<!-- Apple Touch Icon (iOS) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<!-- Android Chrome -->
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+
+<!-- Standaard fallback -->
+<link rel="shortcut icon" href="/favicon-32x32.png">
+
+<!-- Web App Manifest (optioneel) -->
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Microsoft Tiles (optioneel) -->
+<meta name="msapplication-TileImage" content="/android-chrome-512x512.png">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">`;
+
+            // Manifest Code
+            manifestCode.textContent = `{
+  "name": "Jouw Website Naam",
+  "short_name": "Website",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}`;
+
+            // Instructions
+            instructionsCode.textContent = `INSTALLATIE INSTRUCTIES
+========================
+
+Stap 1: Download de Bestanden
+-----------------------------
+Klik op "Download Alle Favicons (ZIP)" om een zip bestand te downloaden
+met alle favicon bestanden.
+
+Stap 2: Pak de ZIP uit
+----------------------
+Pak het gedownloade ZIP bestand uit naar een map op je computer.
+
+Stap 3: Upload naar je Website
+------------------------------
+Upload ALLE favicon bestanden naar de ROOT directory van je website.
+Bijvoorbeeld: public_html/, www/, of htdocs/
+
+Bestandsstructuur:
+  yourwebsite.com/
+  ├── index.html
+  ├── favicon-16x16.png          ← hier
+  ├── favicon-32x32.png          ← hier
+  ├── favicon-48x48.png          ← hier
+  ├── apple-touch-icon.png       ← hier
+  ├── android-chrome-192x192.png ← hier
+  ├── android-chrome-512x512.png ← hier
+  └── site.webmanifest (optioneel)
+
+Stap 4: Voeg HTML Code toe
+--------------------------
+Kopieer de HTML code uit het "HTML Code" tabblad en plak deze
+in de <head> sectie van ELKE pagina van je website.
+
+Stap 5: Test je Favicons
+------------------------
+1. Upload alles naar je webserver
+2. Leeg je browser cache (Ctrl+Shift+Delete)
+3. Bezoek je website
+4. Je zou nu je favicon moeten zien in de browser tab!
+
+OPTIONEEL: Web Manifest
+-----------------------
+Voor Progressive Web Apps (PWA) kun je ook een site.webmanifest
+bestand maken. Kopieer de code uit het "Web Manifest" tabblad,
+sla dit op als "site.webmanifest" en upload naar je website root.
+
+Klaar! Je favicons zijn nu actief! 🎉`;
+        }
+
+        async function downloadAll() {
+            const zip = new JSZip();
+            
+            // Voeg alle favicon bestanden toe aan ZIP
+            generatedFiles.forEach(f => {
+                zip.file(f.name, f.blob);
+            });
+
+            // Voeg site.webmanifest toe
+            const manifest = manifestCode.textContent;
+            zip.file('site.webmanifest', manifest);
+
+            // Voeg README toe
+            const readme = `FAVICON BESTANDEN
+================
+
+Deze ZIP bevat alle benodigde favicon bestanden voor je website.
+
+INSTALLATIE:
+1. Pak deze ZIP uit
+2. Upload ALLE bestanden naar de root van je website
+3. Voeg de HTML code toe aan je <head> sectie
+
+Voor volledige instructies, zie de "Installatie" tab in de Favicon Generator.
+
+Gegenereerd op: ${new Date().toLocaleDateString('nl-NL')}
+`;
+            zip.file('README.txt', readme);
+
+            // Genereer en download ZIP
+            statusText.textContent = 'ZIP bestand wordt gegenereerd...';
+            const content = await zip.generateAsync({type: 'blob'});
+            const url = URL.createObjectURL(content);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'favicons.zip';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadIndividual() {
+            generatedFiles.forEach(f => {
+                const a = document.createElement('a');
+                a.href = f.url;
+                a.download = f.name;
+                a.click();
+            });
+        }
+
+        function copyCode(elementId) {
+            const code = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Gekopieerd!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorMsg.classList.add('active');
+        }
+
+        function hideError() {
+            errorMsg.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
