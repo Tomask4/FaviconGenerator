@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gratis Favicon Generator</title>
+    <title>Favicon Generator</title>
     <style>
         * {
             margin: 0;
@@ -35,7 +35,7 @@
 
         .subtitle {
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-size: 0.95em;
         }
 
@@ -48,6 +48,26 @@
             font-size: 12px;
             font-weight: 600;
             margin-left: 10px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         .upload-area {
@@ -94,7 +114,7 @@
             display: inline-block;
         }
 
-        .btn:hover {
+        .btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
@@ -102,14 +122,6 @@
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: #4caf50;
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
         }
 
         .preview-section {
@@ -149,6 +161,7 @@
             max-width: 100%;
             border-radius: 8px;
             margin-bottom: 10px;
+            background: #f0f0f0;
         }
 
         .preview-item .size-label {
@@ -163,14 +176,6 @@
             display: block;
             font-size: 11px;
             color: #999;
-        }
-
-        .actions {
-            text-align: center;
-            margin: 25px 0;
-            padding: 20px;
-            background: #f0f1ff;
-            border-radius: 10px;
         }
 
         .code-section {
@@ -253,63 +258,29 @@
             display: block;
         }
 
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
+        .success {
+            background: #d4edda;
+            color: #155724;
             padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-
-        .info-box h3 {
-            color: #1976d2;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .info-box p {
-            color: #555;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-content {
+            border-radius: 8px;
+            margin-top: 15px;
             display: none;
         }
 
-        .tab-content.active {
+        .success.active {
             display: block;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎨 Gratis Favicon Generator <span class="badge">100% GRATIS</span></h1>
-        <p class="subtitle">Upload een afbeelding en download alle favicon-formaten direct naar je computer</p>
+        <h1>🎨 Favicon Generator <span class="badge">GRATIS</span></h1>
+        <p class="subtitle">Upload een afbeelding en krijg direct permanente URLs voor al je favicons!</p>
+
+        <div class="info-box">
+            <h3>✨ Hoe werkt het?</h3>
+            <p>Upload een afbeelding (minimaal 512x512px), wacht ~10 seconden, en krijg direct bruikbare HTML code met permanente URLs voor al je favicons!</p>
+        </div>
 
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📁</div>
@@ -320,63 +291,41 @@
         </div>
 
         <div class="error" id="errorMsg"></div>
+        <div class="success" id="successMsg"></div>
 
         <div class="progress" id="progress">
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="status" id="statusText">Bezig met genereren...</div>
+            <div class="status" id="statusText">Bezig met uploaden...</div>
         </div>
 
         <div class="preview-section" id="previewSection">
-            <h2 style="margin-bottom: 15px;">📱 Gegenereerde Favicons</h2>
+            <h2 style="margin-bottom: 15px;">📱 Gegenereerde Favicons met Permanente URLs</h2>
             <div class="preview-grid" id="previewGrid"></div>
 
-            <div class="actions">
-                <h3 style="margin-bottom: 15px;">💾 Download Opties</h3>
-                <button class="btn btn-secondary" onclick="downloadAll()">⬇️ Download Alle Favicons (ZIP)</button>
-                <button class="btn" onclick="downloadIndividual()">📥 Download Individueel</button>
-            </div>
-
             <div class="info-box">
-                <h3>📁 Hoe gebruik je de favicons?</h3>
-                <p>1. Download alle bestanden naar de root van je website<br>
-                   2. Kopieer de HTML code hieronder naar de &lt;head&gt; sectie van je HTML<br>
-                   3. Upload de favicon bestanden naar je webserver samen met je HTML</p>
+                <h3>✅ Klaar! Gebruik de code hieronder</h3>
+                <p>De favicons zijn geüpload en krijgen permanente URLs die nooit verlopen. Kopieer de HTML code en plak deze in de &lt;head&gt; van je website.</p>
             </div>
 
             <div class="code-section">
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('html')">HTML Code</button>
-                    <button class="tab" onclick="switchTab('manifest')">Web Manifest</button>
-                    <button class="tab" onclick="switchTab('instructions')">Installatie</button>
-                </div>
-
-                <div class="tab-content active" id="html-tab">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode('htmlCode')">Kopieer</button>
-                        <pre id="htmlCode"></pre>
-                    </div>
-                </div>
-
-                <div class="tab-content" id="manifest-tab">
-                    <div class="code-block">
-                        <button class="copy-btn" onclick="copyCode('manifestCode')">Kopieer</button>
-                        <pre id="manifestCode"></pre>
-                    </div>
-                </div>
-
-                <div class="tab-content" id="instructions-tab">
-                    <div class="code-block">
-                        <pre id="instructionsCode"></pre>
-                    </div>
+                <h2 style="margin-bottom: 15px;">📋 HTML Code (Direct te gebruiken!)</h2>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode()">Kopieer</button>
+                    <pre id="htmlCode"></pre>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
+        // Obfuscated API configuration - DO NOT EDIT
+        const _0x4a2c = ['aHR0cHM6Ly9hcGkuaW1nYmIuY29tLzEvdXBsb2FkP2tleT0='];
+        const _0x5b3d = (s) => atob(s);
+        const _0x6c4e = ['ed3c1360790006cda193644557cf5643'];
+        const _0xapi = () => _0x5b3d(_0x4a2c[0]) + _0x6c4e[0];
+
         // Favicon configuraties
         const faviconSizes = [
             { size: 16, name: 'favicon-16x16.png', description: 'Browser tab' },
@@ -396,11 +345,10 @@
         const previewSection = document.getElementById('previewSection');
         const previewGrid = document.getElementById('previewGrid');
         const htmlCode = document.getElementById('htmlCode');
-        const manifestCode = document.getElementById('manifestCode');
-        const instructionsCode = document.getElementById('instructionsCode');
         const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
 
-        let generatedFiles = [];
+        let uploadedFiles = [];
 
         // Drag & Drop handlers
         uploadArea.addEventListener('dragover', (e) => {
@@ -415,9 +363,8 @@
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
             }
         });
 
@@ -433,32 +380,38 @@
                 return;
             }
 
+            // Check API key
+            if (_0x6c4e[0] === 'VERVANG_MET_JOUW_API_KEY') {
+                showError('API key niet ingesteld. Zie de instructies in de code!');
+                return;
+            }
+
             hideError();
+            hideSuccess();
             progress.classList.add('active');
             previewSection.classList.remove('active');
-            generatedFiles = [];
+            uploadedFiles = [];
             
             try {
                 const img = await loadImage(file);
                 
                 for (let i = 0; i < faviconSizes.length; i++) {
                     const config = faviconSizes[i];
-                    updateProgress((i / faviconSizes.length) * 100, `Genereren ${config.name}...`);
+                    updateProgress((i / faviconSizes.length) * 90, `Genereren & uploaden ${config.name}...`);
                     
                     const blob = await resizeImage(img, config.size);
-                    const url = URL.createObjectURL(blob);
+                    const url = await uploadToImgbb(blob, config.name);
                     
-                    generatedFiles.push({
+                    uploadedFiles.push({
                         ...config,
-                        blob: blob,
                         url: url
                     });
                 }
 
-                updateProgress(100, 'Klaar!');
+                updateProgress(100, 'Alle favicons geüpload! ✓');
                 setTimeout(() => {
                     displayResults();
-                }, 300);
+                }, 500);
                 
             } catch (error) {
                 console.error('Error:', error);
@@ -488,8 +441,7 @@
                 canvas.height = size;
                 const ctx = canvas.getContext('2d');
                 
-                // GEEN witte achtergrond - transparantie behouden!
-                // ctx.clearRect zorgt ervoor dat canvas transparant blijft
+                // Transparantie behouden
                 ctx.clearRect(0, 0, size, size);
                 
                 // Bereken schaling en positie
@@ -503,6 +455,37 @@
             });
         }
 
+        async function uploadToImgbb(blob, filename) {
+            const formData = new FormData();
+            const base64 = await blobToBase64(blob);
+            const base64Data = base64.split(',')[1];
+            
+            formData.append('image', base64Data);
+            formData.append('name', filename);
+
+            const response = await fetch(_0xapi(), {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'Upload mislukt. Check je API key.');
+            }
+
+            const data = await response.json();
+            return data.data.url;
+        }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
         function updateProgress(percent, text) {
             progressFill.style.width = percent + '%';
             statusText.textContent = text;
@@ -512,7 +495,7 @@
             progress.classList.remove('active');
             previewSection.classList.add('active');
 
-            previewGrid.innerHTML = generatedFiles.map((f, idx) => `
+            previewGrid.innerHTML = uploadedFiles.map((f, idx) => `
                 <div class="preview-item">
                     <img src="${f.url}" alt="${f.name}">
                     <span class="size-label">${f.size}x${f.size}</span>
@@ -520,161 +503,32 @@
                 </div>
             `).join('');
 
-            generateCodes();
+            generateHTMLCode();
         }
 
-        function generateCodes() {
-            // HTML Code
-            htmlCode.textContent = `<!-- Plaats deze code in de <head> sectie van je HTML -->
+        function generateHTMLCode() {
+            const find = (name) => uploadedFiles.find(f => f.name === name)?.url || '';
+            
+            htmlCode.textContent = `<!-- Favicons - Plak dit in de <head> van je HTML -->
 
 <!-- Standard favicons -->
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="16x16" href="${find('favicon-16x16.png')}">
+<link rel="icon" type="image/png" sizes="32x32" href="${find('favicon-32x32.png')}">
+<link rel="icon" type="image/png" sizes="48x48" href="${find('favicon-48x48.png')}">
 
 <!-- Apple Touch Icon (iOS) -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="${find('apple-touch-icon.png')}">
 
 <!-- Android Chrome -->
-<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="icon" type="image/png" sizes="192x192" href="${find('android-chrome-192x192.png')}">
+<link rel="icon" type="image/png" sizes="512x512" href="${find('android-chrome-512x512.png')}">
 
 <!-- Standaard fallback -->
-<link rel="shortcut icon" href="/favicon-32x32.png">
-
-<!-- Web App Manifest (optioneel) -->
-<link rel="manifest" href="/site.webmanifest">
-
-<!-- Microsoft Tiles (optioneel) -->
-<meta name="msapplication-TileImage" content="/android-chrome-512x512.png">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="theme-color" content="#ffffff">`;
-
-            // Manifest Code
-            manifestCode.textContent = `{
-  "name": "Jouw Website Naam",
-  "short_name": "Website",
-  "icons": [
-    {
-      "src": "/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "start_url": "/"
-}`;
-
-            // Instructions
-            instructionsCode.textContent = `INSTALLATIE INSTRUCTIES
-========================
-
-Stap 1: Download de Bestanden
------------------------------
-Klik op "Download Alle Favicons (ZIP)" om een zip bestand te downloaden
-met alle favicon bestanden.
-
-Stap 2: Pak de ZIP uit
-----------------------
-Pak het gedownloade ZIP bestand uit naar een map op je computer.
-
-Stap 3: Upload naar je Website
-------------------------------
-Upload ALLE favicon bestanden naar de ROOT directory van je website.
-Bijvoorbeeld: public_html/, www/, of htdocs/
-
-Bestandsstructuur:
-  yourwebsite.com/
-  ├── index.html
-  ├── favicon-16x16.png          ← hier
-  ├── favicon-32x32.png          ← hier
-  ├── favicon-48x48.png          ← hier
-  ├── apple-touch-icon.png       ← hier
-  ├── android-chrome-192x192.png ← hier
-  ├── android-chrome-512x512.png ← hier
-  └── site.webmanifest (optioneel)
-
-Stap 4: Voeg HTML Code toe
---------------------------
-Kopieer de HTML code uit het "HTML Code" tabblad en plak deze
-in de <head> sectie van ELKE pagina van je website.
-
-Stap 5: Test je Favicons
-------------------------
-1. Upload alles naar je webserver
-2. Leeg je browser cache (Ctrl+Shift+Delete)
-3. Bezoek je website
-4. Je zou nu je favicon moeten zien in de browser tab!
-
-OPTIONEEL: Web Manifest
------------------------
-Voor Progressive Web Apps (PWA) kun je ook een site.webmanifest
-bestand maken. Kopieer de code uit het "Web Manifest" tabblad,
-sla dit op als "site.webmanifest" en upload naar je website root.
-
-Klaar! Je favicons zijn nu actief! 🎉`;
+<link rel="shortcut icon" href="${find('favicon-32x32.png')}">`;
         }
 
-        async function downloadAll() {
-            const zip = new JSZip();
-            
-            // Voeg alle favicon bestanden toe aan ZIP
-            generatedFiles.forEach(f => {
-                zip.file(f.name, f.blob);
-            });
-
-            // Voeg site.webmanifest toe
-            const manifest = manifestCode.textContent;
-            zip.file('site.webmanifest', manifest);
-
-            // Voeg README toe
-            const readme = `FAVICON BESTANDEN
-================
-
-Deze ZIP bevat alle benodigde favicon bestanden voor je website.
-
-INSTALLATIE:
-1. Pak deze ZIP uit
-2. Upload ALLE bestanden naar de root van je website
-3. Voeg de HTML code toe aan je <head> sectie
-
-Voor volledige instructies, zie de "Installatie" tab in de Favicon Generator.
-
-Gegenereerd op: ${new Date().toLocaleDateString('nl-NL')}
-`;
-            zip.file('README.txt', readme);
-
-            // Genereer en download ZIP
-            statusText.textContent = 'ZIP bestand wordt gegenereerd...';
-            const content = await zip.generateAsync({type: 'blob'});
-            const url = URL.createObjectURL(content);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'favicons.zip';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function downloadIndividual() {
-            generatedFiles.forEach(f => {
-                const a = document.createElement('a');
-                a.href = f.url;
-                a.download = f.name;
-                a.click();
-            });
-        }
-
-        function copyCode(elementId) {
-            const code = document.getElementById(elementId).textContent;
+        function copyCode() {
+            const code = htmlCode.textContent;
             navigator.clipboard.writeText(code).then(() => {
                 const btn = event.target;
                 const originalText = btn.textContent;
@@ -685,20 +539,6 @@ Gegenereerd op: ${new Date().toLocaleDateString('nl-NL')}
             });
         }
 
-        function switchTab(tabName) {
-            // Update tab buttons
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            // Update tab content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabName + '-tab').classList.add('active');
-        }
-
         function showError(msg) {
             errorMsg.textContent = msg;
             errorMsg.classList.add('active');
@@ -706,6 +546,18 @@ Gegenereerd op: ${new Date().toLocaleDateString('nl-NL')}
 
         function hideError() {
             errorMsg.classList.remove('active');
+        }
+
+        function showSuccess(msg) {
+            successMsg.textContent = msg;
+            successMsg.classList.add('active');
+            setTimeout(() => {
+                successMsg.classList.remove('active');
+            }, 3000);
+        }
+
+        function hideSuccess() {
+            successMsg.classList.remove('active');
         }
     </script>
 </body>
